@@ -36,33 +36,33 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(600, 200);
+  createCanvas(windowWidth, windowHeight);
 
   var message = "This is a message";
  console.log(message)
   
-  trex = createSprite(50,160,20,50);
+  trex = createSprite(50,height-40,20,50);
   trex.addAnimation("running", trex_running);
   trex.addAnimation("collided", trex_collided);
   
 
   trex.scale = 0.5;
   
-  ground = createSprite(200,180,400,20);
+  ground = createSprite(width/2,height-20,width,20);
   ground.addImage("ground",groundImage);
   ground.x = ground.width /2;
   
-  gameOver = createSprite(300,100);
+  gameOver = createSprite(width/2,height/2 -40);
   gameOver.addImage(gameOverImg);
   
-  restart = createSprite(300,140);
+  restart = createSprite(width/2,height/2);
   restart.addImage(restartImg);
   
  
-  gameOver.scale = 0.5;
-  restart.scale = 0.5;
+  gameOver.scale = 0.75;
+  restart.scale = 0.75;
   
-  invisibleGround = createSprite(200,190,400,10);
+  invisibleGround = createSprite(width/2,height-10,width,10);
   invisibleGround.visible = false;
   
   //create Obstacle and Cloud Groups
@@ -81,7 +81,7 @@ function draw() {
   
   background(180);
   //displaying score
-  text("Score: "+ score, 500,50);
+  text("Score: "+ score, width-100,height- 450);
   
   
   if(gameState === PLAY){
@@ -102,9 +102,10 @@ function draw() {
     }
     
     //jump when the space key is pressed
-    if(keyDown("space")&& trex.y >= 100) {
+    if(touches.length>0 ||keyDown("space")&& trex.y >= 158) {
         trex.velocityY = -12;
         jumpSound.play();
+        touches= []
     }
     
     //add gravity
@@ -144,8 +145,9 @@ function draw() {
      obstaclesGroup.setVelocityXEach(0);
      cloudsGroup.setVelocityXEach(0);    
      
-     if(mousePressedOver(restart)){
+     if(touches.length>0||mousePressedOver(restart)){
       redo();
+      touches= []
      }
    }
   
@@ -163,7 +165,7 @@ function draw() {
 
 function spawnObstacles(){
  if (frameCount % 60 === 0){
-   var obstacle = createSprite(600,165,10,40);
+   var obstacle = createSprite(width,height-40,10,40);
    obstacle.velocityX = -(6 + score/100);
    
     //generate random obstacles
@@ -196,10 +198,10 @@ function spawnObstacles(){
 function spawnClouds() {
   //write code here to spawn the clouds
   if (frameCount % 60 === 0) {
-    var cloud = createSprite(600,120,40,10);
-    cloud.y = Math.round(random(80,120));
+    var cloud = createSprite(width,height-100,40,10);
+    cloud.y = Math.round(random(height-100,height-200));
     cloud.addImage(cloudImage);
-    cloud.scale = 0.5;
+    cloud.scale = 1;
     cloud.velocityX = -3;
     
      //assign lifetime to the variable
